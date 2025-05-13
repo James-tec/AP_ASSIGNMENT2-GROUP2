@@ -1,0 +1,54 @@
+using System; 
+
+class Book
+{
+    // Fields to store book code and book name
+    public string Code;
+    public string Name;
+
+    // Method to accept input from the user for one book
+    public void EnterDetails()
+    {
+        Console.Write("Enter Book Code: ");
+        Code = Console.ReadLine(); // Reads and store book code from user
+
+        Console.Write("Enter Book Name: ");
+        Name = Console.ReadLine(); // Read and store book name
+    }
+
+    // Method to display the book details
+    public void ShowDetails()
+    {
+        Console.WriteLine($"Code: {Code}, Name: {Name}"); // Print book info
+    }
+}
+
+// Main class 
+class Library
+{
+    static void Main()
+    {
+        // Ask the user how many books they want to enter
+        Console.Write("Enter number of books: ");
+        int n = int.Parse(Console.ReadLine()); // Reads and convert input to an integer
+
+        // Declare an array to hold Book objects
+        Book[] books = new Book[n]; // Create an array of size 'n'
+
+        // Loop through the array to input details of each book
+        for (int i = 0; i < n; i++)
+        {
+            books[i] = new Book(); // Create a new Book object at each index
+            Console.WriteLine($"\nEnter details for book {i + 1}:");
+            books[i].EnterDetails(); // Call method to get input from user
+        }
+
+        // Display the list of all books
+        Console.WriteLine("\nList of Books in the Library:");
+        foreach (Book book in books) // Loop through each book in the array
+        {
+            book.ShowDetails(); // Call method to print book details
+        }
+    }
+}
+
