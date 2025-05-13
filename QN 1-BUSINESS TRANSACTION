@@ -1,0 +1,63 @@
+using System;
+
+class Business
+{
+    // Member variables
+    double buyingPrice;
+    double transportCost;
+    double sellingPrice;
+
+    // Default constructor
+    public Business()
+    {
+        buyingPrice = 0;
+        transportCost = 0;
+        sellingPrice = 0;
+    }
+
+    // Parameterized constructor
+    public Business(double buy, double transport, double sell)
+    {
+        buyingPrice = buy;
+        transportCost = transport;
+        sellingPrice = sell;
+    }
+
+    // Method to compute profit or loss
+    public void ComputeProfitOrLoss()
+    {
+        double totalCost = buyingPrice + transportCost;
+        double result = sellingPrice - totalCost;
+
+        if (result > 0)
+            Console.WriteLine($"\nProfit made: KES {result}");
+        else if (result < 0)
+            Console.WriteLine($"\nLoss incurred: KES {-result}");
+        else
+            Console.WriteLine("\nNo profit, no loss.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Prompt user to enter buying price
+        Console.Write("Enter buying price: ");
+        double buy = Convert.ToDouble(Console.ReadLine());
+
+        // Prompt user to enter transport cost
+        Console.Write("Enter transport cost: ");
+        double transport = Convert.ToDouble(Console.ReadLine());
+
+        // Prompt user to enter selling price
+        Console.Write("Enter selling price: ");
+        double sell = Convert.ToDouble(Console.ReadLine());
+
+        // Create Business object using user's input
+        Business item = new Business(buy, transport, sell);
+
+        // Call method to compute and display profit or loss
+        item.ComputeProfitOrLoss();
+    }
+}
