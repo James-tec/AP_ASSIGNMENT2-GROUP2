@@ -1,35 +1,32 @@
 using System;
 
-// Base class representing the big bank account
 class BankAccount
 {
-    // Account properties
-    public string AccountNumber;  // Stores the account number
-    public string HolderName;    // Stores the account holder's name
-    public double Balance;       // Stores the current account balance
+    public string AccountNumber;
+    public string HolderName;
+    public double Balance;
 
-    // Constructor to initialize the account
+    // Base constructor used by derived classes
     public BankAccount(string accNo, string name, double balance)
     {
-        AccountNumber = accNo;   // Set account number
-        HolderName = name;      // Set account holder name
-        Balance = balance;      // Set initial balance
+        AccountNumber = accNo;
+        HolderName = name;
+        Balance = balance;
     }
 
     // Method to deposit money into the account
     public void Deposit(double amount)
     {
-        Balance += amount;  // Add amount to balance
+        Balance += amount;
         Console.WriteLine($"Deposited KES {amount}. New balance: KES {Balance}");
     }
 
-    // Virtual method to withdraw money (can be overridden by child classes)
+    // Virtual withdraw method, allows overriding
     public virtual void Withdraw(double amount)
     {
-        // Check if sufficient funds exist
         if (Balance >= amount)
         {
-            Balance -= amount;  // Deduct amount from balance
+            Balance -= amount;
             Console.WriteLine($"Withdrew KES {amount}. New balance: KES {Balance}");
         }
         else
@@ -38,43 +35,44 @@ class BankAccount
         }
     }
 
-    // Method to check current balance
+    // Show account details
     public void CheckBalance()
     {
+        Console.WriteLine($"Account Number: {AccountNumber}");
+        Console.WriteLine($"Account Holder: {HolderName}");
         Console.WriteLine($"Account Balance: KES {Balance}");
     }
 }
 
-// Savings account class (inherits from BankAccount)
+// SavingsAccount class inherits BankAccount and starts with 5000
 class SavingsAccount : BankAccount
 {
-    // Constructor sets fixed initial balance of 5000
-    public SavingsAccount(string accNo, string name) : base(accNo, name, 5000) { }
+    public SavingsAccount(string accNo, string name)
+        : base(accNo, name, 5000) { }
 
-    // Method to add interest to the account
+    // Add 5% interest to the balance
     public void AddInterest()
     {
-        double interest = Balance * 0.05;  // Calculate 5% interest
-        Balance += interest;               // Add interest to balance
+        double interest = Balance * 0.05;
+        Balance += interest;
         Console.WriteLine($"Added interest: KES {interest}. New balance: KES {Balance}");
     }
 }
 
-// Current account class (inherits from BankAccount)
+// CurrentAccount allows overdraft up to KES 5000 and starts with 10000
 class CurrentAccount : BankAccount
 {
-    private double OverdraftLimit = 5000;  // Set overdraft limit to 5000
+    private double OverdraftLimit = 5000;
 
-    // Constructor sets fixed initial balance of 10000
-    public CurrentAccount(string accNo, string name) : base(accNo, name, 10000) { }
+    public CurrentAccount(string accNo, string name)
+        : base(accNo, name, 10000) { }
 
-    // Override withdraw method to allow overdraft
+    // Override Withdraw to include overdraft
     public override void Withdraw(double amount)
     {
-        // Check if withdrawal is within overdraft limit
         if (Balance - amount >= -OverdraftLimit)
         {
-            Balance -= amount;  // Deduct amount from balance
+            Balance -= amount;
             Console.WriteLine($"Withdrew KES {amount}. New balance: KES {Balance}");
         }
         else
@@ -84,66 +82,82 @@ class CurrentAccount : BankAccount
     }
 }
 
+// Main program class
 class Program
 {
     static void Main()
     {
-        // Display welcome message
-        Console.WriteLine("Welcome to Simple Banking System");
-        Console.WriteLine("1. Savings Account");
-        Console.WriteLine("2. Current Account");
-        Console.Write("Choose account type: ");
+        Console.WriteLine("=== Welcome to Simple Banking System ===");
 
-        // Create account based on user choice
-        BankAccount account = Console.ReadLine() == "1"
-            ? new SavingsAccount("SAV123", "John")  // Create savings account
-            : new CurrentAccount("CUR456", "John"); // Create current account
+        // Get basic account details from user
+        Console.Write("Enter account number: ");
+        string accNo = Console.ReadLine();
 
-        // Main program loop
+        Console.Write("Enter account holder name: ");
+        string holderName = Console.ReadLine();
+
+        // Ask user to choose the type of account
+        Console.WriteLine("\nSelect account type:");
+        Console.WriteLine("1. Savings Account (Starts with KES 5000)");
+        Console.WriteLine("2. Current Account (Starts with KES 10000)");
+        Console.Write("Enter choice: ");
+        string accTypeChoice = Console.ReadLine();
+
+        BankAccount account;
+
+        // Instantiate the correct type of account with predefined starting balance
+        if (accTypeChoice == "1")
+            account = new SavingsAccount(accNo, holderName);
+        else
+            account = new CurrentAccount(accNo, holderName);
+
+        // Menu for account operations
         while (true)
         {
-            // Display menu options
-            Console.WriteLine("\n1. Deposit");
+            Console.WriteLine("\n--- Account Menu ---");
+            Console.WriteLine("1. Deposit");
             Console.WriteLine("2. Withdraw");
             Console.WriteLine("3. Check Balance");
             Console.WriteLine("4. Exit");
-            Console.Write("Choose action: ");
+            Console.Write("Enter choice: ");
+            string choice = Console.ReadLine();
 
-            string choice = Console.ReadLine();  // Get user choice
+            if (choice == "4") break;
 
-            if (choice == "4") break;  // Exit loop if user chooses to exit
-
-            // For actions requiring amount (deposit/withdraw)
-            if (choice == "1" || choice == "2")
+            switch (choice)
             {
-                Console.Write("Enter amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
+                case "1":
+                    Console.Write("Enter amount to deposit: ");
+                    double dep = Convert.ToDouble(Console.ReadLine());
+                    account.Deposit(dep);
+                    break;
 
-                // Process deposit or withdrawal
-                switch (choice)
-                {
-                    case "1":
-                        account.Deposit(amount);  // Call deposit method
-                        break;
-                    case "2":
-                        account.Withdraw(amount); // Call withdraw method
-                        break;
-                }
-            }
-            else if (choice == "3")
-            {
-                account.CheckBalance();  // Call balance check method
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice!");  // Handle invalid input
+                case "2":
+                    Console.Write("Enter amount to withdraw: ");
+                    double wd = Convert.ToDouble(Console.ReadLine());
+                    account.Withdraw(wd);
+                    break;
+
+                case "3":
+                    account.CheckBalance();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid option!");
+                    break;
             }
         }
 
-        // Add interest if it's a savings account
+        // Apply interest if account is of type SavingsAccount
         if (account is SavingsAccount)
         {
+            Console.WriteLine("\nApplying end-of-year interest...");
             ((SavingsAccount)account).AddInterest();
         }
+
+        Console.WriteLine("\nThank you for using our banking system!");
     }
 }
+
+
+       
