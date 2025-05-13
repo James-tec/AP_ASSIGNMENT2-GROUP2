@@ -1,0 +1,7 @@
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\obj\Debug\Question3.csproj.AssemblyReference.cache
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\obj\Debug\Question3.csproj.CoreCompileInputs.cache
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\bin\Debug\Question3.exe.config
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\bin\Debug\Question3.exe
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\bin\Debug\Question3.pdb
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\obj\Debug\Question3.exe
+C:\Users\Pc\3D Objects\CT\Course Notes\2.2\Application Programming\Question3\obj\Debug\Question3.pdb
