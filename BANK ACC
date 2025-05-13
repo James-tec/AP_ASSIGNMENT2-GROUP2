@@ -1,0 +1,149 @@
+using System;
+
+// Base class representing the big bank account
+class BankAccount
+{
+    // Account properties
+    public string AccountNumber;  // Stores the account number
+    public string HolderName;    // Stores the account holder's name
+    public double Balance;       // Stores the current account balance
+
+    // Constructor to initialize the account
+    public BankAccount(string accNo, string name, double balance)
+    {
+        AccountNumber = accNo;   // Set account number
+        HolderName = name;      // Set account holder name
+        Balance = balance;      // Set initial balance
+    }
+
+    // Method to deposit money into the account
+    public void Deposit(double amount)
+    {
+        Balance += amount;  // Add amount to balance
+        Console.WriteLine($"Deposited KES {amount}. New balance: KES {Balance}");
+    }
+
+    // Virtual method to withdraw money (can be overridden by child classes)
+    public virtual void Withdraw(double amount)
+    {
+        // Check if sufficient funds exist
+        if (Balance >= amount)
+        {
+            Balance -= amount;  // Deduct amount from balance
+            Console.WriteLine($"Withdrew KES {amount}. New balance: KES {Balance}");
+        }
+        else
+        {
+            Console.WriteLine("Insufficient funds!");
+        }
+    }
+
+    // Method to check current balance
+    public void CheckBalance()
+    {
+        Console.WriteLine($"Account Balance: KES {Balance}");
+    }
+}
+
+// Savings account class (inherits from BankAccount)
+class SavingsAccount : BankAccount
+{
+    // Constructor sets fixed initial balance of 5000
+    public SavingsAccount(string accNo, string name) : base(accNo, name, 5000) { }
+
+    // Method to add interest to the account
+    public void AddInterest()
+    {
+        double interest = Balance * 0.05;  // Calculate 5% interest
+        Balance += interest;               // Add interest to balance
+        Console.WriteLine($"Added interest: KES {interest}. New balance: KES {Balance}");
+    }
+}
+
+// Current account class (inherits from BankAccount)
+class CurrentAccount : BankAccount
+{
+    private double OverdraftLimit = 5000;  // Set overdraft limit to 5000
+
+    // Constructor sets fixed initial balance of 10000
+    public CurrentAccount(string accNo, string name) : base(accNo, name, 10000) { }
+
+    // Override withdraw method to allow overdraft
+    public override void Withdraw(double amount)
+    {
+        // Check if withdrawal is within overdraft limit
+        if (Balance - amount >= -OverdraftLimit)
+        {
+            Balance -= amount;  // Deduct amount from balance
+            Console.WriteLine($"Withdrew KES {amount}. New balance: KES {Balance}");
+        }
+        else
+        {
+            Console.WriteLine("Overdraft limit exceeded!");
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Display welcome message
+        Console.WriteLine("Welcome to Simple Banking System");
+        Console.WriteLine("1. Savings Account");
+        Console.WriteLine("2. Current Account");
+        Console.Write("Choose account type: ");
+
+        // Create account based on user choice
+        BankAccount account = Console.ReadLine() == "1"
+            ? new SavingsAccount("SAV123", "John")  // Create savings account
+            : new CurrentAccount("CUR456", "John"); // Create current account
+
+        // Main program loop
+        while (true)
+        {
+            // Display menu options
+            Console.WriteLine("\n1. Deposit");
+            Console.WriteLine("2. Withdraw");
+            Console.WriteLine("3. Check Balance");
+            Console.WriteLine("4. Exit");
+            Console.Write("Choose action: ");
+
+            string choice = Console.ReadLine();  // Get user choice
+
+            if (choice == "4") break;  // Exit loop if user chooses to exit
+
+            // For actions requiring amount (deposit/withdraw)
+            if (choice == "1" || choice == "2")
+            {
+                Console.Write("Enter amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                // Process deposit or withdrawal
+                switch (choice)
+                {
+                    case "1":
+                        account.Deposit(amount);  // Call deposit method
+                        break;
+                    case "2":
+                        account.Withdraw(amount); // Call withdraw method
+                        break;
+                }
+            }
+            else if (choice == "3")
+            {
+                account.CheckBalance();  // Call balance check method
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice!");  // Handle invalid input
+            }
+        }
+
+        // Add interest if it's a savings account
+        if (account is SavingsAccount)
+        {
+            ((SavingsAccount)account).AddInterest();
+        }
+    }
+}
